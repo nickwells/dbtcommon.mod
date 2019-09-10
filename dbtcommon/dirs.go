@@ -26,8 +26,8 @@ const (
 	ReleaseReadMeFileName   = "ReadMe"
 	ReleaseWarningFileName  = "Warning"
 
-	FragmentsDirName = "fragments"
-	DatabaseDirName  = "databases"
+	MacrosDirName   = "macros"
+	DatabaseDirName = "databases"
 
 	SchemaDirName        = "schemas"
 	SchemaSubDirTypes    = "types"
@@ -37,23 +37,23 @@ const (
 )
 
 var dirHierarchy = []DirSpec{
-	DirSpec{
+	{
 		name: DbtDirName,
 		subDirs: []DirSpec{
-			DirSpec{
+			{
 				name: ReleaseScriptsBaseName,
 				subDirs: []DirSpec{
-					DirSpec{
+					{
 						name:          ReleaseArchiveDirName,
 						ignoreContent: true,
 					},
 				},
 			},
-			DirSpec{
-				name:          FragmentsDirName,
+			{
+				name:          MacrosDirName,
 				ignoreContent: true,
 			},
-			DirSpec{
+			{
 				name:          DatabaseDirName,
 				ignoreContent: true,
 			},
@@ -62,27 +62,27 @@ var dirHierarchy = []DirSpec{
 }
 
 var schemaDirs = []DirSpec{
-	DirSpec{
+	{
 		name:          SchemaSubDirTypes,
 		ignoreContent: true,
 	},
-	DirSpec{
+	{
 		name:          SchemaSubDirTables,
 		ignoreContent: true,
 	},
-	DirSpec{
+	{
 		name:          SchemaSubDirFuncs,
 		ignoreContent: true,
 	},
-	DirSpec{
+	{
 		name:          SchemaSubDirTriggers,
 		ignoreContent: true,
 	},
 }
 
-// DbtFragmentDirName returns the name of the fragments directory
-func DbtFragmentDirName() string {
-	return filepath.Join(BaseDirName, DbtDirName, FragmentsDirName)
+// DbtMacroDirName returns the name of the macros directory
+func DbtMacroDirName() string {
+	return filepath.Join(BaseDirName, DbtDirName, MacrosDirName)
 }
 
 // DbtDBBaseDirName returns the base name of the database directories
@@ -177,8 +177,8 @@ func makeDirIfMissing(dirName string) error {
 	} else if err != nil {
 		return err
 	} else if !info.Mode().IsDir() {
-		return fmt.Errorf(
-			"Couldn't create the directory '%s' - it already exists and is not a directory",
+		return fmt.Errorf("Couldn't create the directory %q"+
+			" - it already exists and is not a directory",
 			dirName)
 	}
 	return nil
