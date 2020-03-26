@@ -27,9 +27,8 @@ const (
 	ReleaseWarningFileName  = "Warning"
 
 	MacrosDirName   = "macros"
-	DatabaseDirName = "databases"
+	DBSchemaDirName = "db.schema"
 
-	SchemaDirName        = "schemas"
 	SchemaSubDirTypes    = "types"
 	SchemaSubDirTables   = "tables"
 	SchemaSubDirFuncs    = "funcs"
@@ -54,7 +53,7 @@ var dirHierarchy = []DirSpec{
 				ignoreContent: true,
 			},
 			{
-				name:          DatabaseDirName,
+				name:          DBSchemaDirName,
 				ignoreContent: true,
 			},
 		},
@@ -80,59 +79,55 @@ var schemaDirs = []DirSpec{
 	},
 }
 
-// DbtMacroDirName returns the name of the macros directory
-func DbtMacroDirName() string {
-	return filepath.Join(BaseDirName, DbtDirName, MacrosDirName)
+// DbtDirStart returns the name of the starting directory
+func DbtDirStart() string {
+	return filepath.Join(BaseDirName, DbtDirName)
 }
 
-// DbtDBBaseDirName returns the base name of the database directories
-func DbtDBBaseDirName() string {
-	return filepath.Join(BaseDirName, DbtDirName, DatabaseDirName)
+// DbtDirMacros returns the fullname of the macros directory
+func DbtDirMacros() string {
+	return filepath.Join(DbtDirStart(), MacrosDirName)
 }
 
-// DbtDBDirName returns the name of the database directory
-func DbtDBDirName(dbName string) string {
-	return filepath.Join(DbtDBBaseDirName(), dbName)
+// DbtDirDBSchemaBase returns the full base name of the DB.schema directories
+func DbtDirDBSchemaBase() string {
+	return filepath.Join(DbtDirStart(), DBSchemaDirName)
 }
 
-// DbtSchemaBaseDirName returns the base name of the schema directories
-func DbtSchemaBaseDirName(dbName string) string {
-	return filepath.Join(DbtDBDirName(dbName), SchemaDirName)
+// DbtDirDBSchema returns the full name of the directory for the given database
+// and schema
+func DbtDirDBSchema(dbName, schemaName string) string {
+	return filepath.Join(DbtDirDBSchemaBase(), dbName+"."+schemaName)
 }
 
-// DbtSchemaDirName returns the full name of the directory for the given schema
-func DbtSchemaDirName(dbName, schemaName string) string {
-	return filepath.Join(DbtSchemaBaseDirName(dbName), schemaName)
+// DbtDirReleaseBase returns the full name of the release scripts directory
+func DbtDirReleaseBase() string {
+	return filepath.Join(DbtDirStart(), ReleaseScriptsBaseName)
 }
 
-// DbtReleaseBaseDirName returns the full name of the release scripts directory
-func DbtReleaseBaseDirName() string {
-	return filepath.Join(BaseDirName, DbtDirName, ReleaseScriptsBaseName)
+// DbtDirRelease returns the full name of the release  directory
+func DbtDirRelease(rel string) string {
+	return filepath.Join(DbtDirReleaseBase(), rel)
 }
 
-// DbtReleaseDirName returns the full name of the release  directory
-func DbtReleaseDirName(rel string) string {
-	return filepath.Join(DbtReleaseBaseDirName(), rel)
+// DbtDirReleaseSQL returns the full name of the release SQL.files directory
+func DbtDirReleaseSQL(rel string) string {
+	return filepath.Join(DbtDirReleaseBase(), rel, ReleaseSQLDirName)
 }
 
-// DbtReleaseSQLDirName returns the full name of the release SQL.files directory
-func DbtReleaseSQLDirName(rel string) string {
-	return filepath.Join(DbtReleaseBaseDirName(), rel, ReleaseSQLDirName)
+// DbtFileReleaseManifest returns the full name of the release manifest file
+func DbtFileReleaseManifest(rel string) string {
+	return filepath.Join(DbtDirRelease(rel), ReleaseManifestFileName)
 }
 
-// DbtReleaseManifestFile returns the full name of the release manifest file
-func DbtReleaseManifestFile(rel string) string {
-	return filepath.Join(DbtReleaseDirName(rel), ReleaseManifestFileName)
+// DbtFileReleaseReadMe returns the full name of the release ReadMe file
+func DbtFileReleaseReadMe(rel string) string {
+	return filepath.Join(DbtDirRelease(rel), ReleaseReadMeFileName)
 }
 
-// DbtReleaseReadMeFile returns the full name of the release ReadMe file
-func DbtReleaseReadMeFile(rel string) string {
-	return filepath.Join(DbtReleaseDirName(rel), ReleaseReadMeFileName)
-}
-
-// DbtReleaseWarningFile returns the full name of the release Warning file
-func DbtReleaseWarningFile(rel string) string {
-	return filepath.Join(DbtReleaseDirName(rel), ReleaseWarningFileName)
+// DbtFileReleaseWarning returns the full name of the release Warning file
+func DbtFileReleaseWarning(rel string) string {
+	return filepath.Join(DbtDirRelease(rel), ReleaseWarningFileName)
 }
 
 // checkSubDirs recursively checks the dirs exist in base
@@ -162,7 +157,7 @@ func CheckDirs(dbName, schemaName string) bool {
 		return false
 	}
 
-	return checkSubDirs(DbtSchemaDirName(dbName, schemaName), schemaDirs)
+	return checkSubDirs(DbtDirDBSchema(dbName, schemaName), schemaDirs)
 }
 
 // makeDirIfMissing will create a directory if it is not present and will
@@ -214,19 +209,13 @@ func MakeMissingDirs(dbName, schemaName string) error {
 		return err
 	}
 
-	dirName := DbtDBDirName(dbName)
+	dirName := DbtDirDBSchemaBase()
 	err = makeDirIfMissing(dirName)
 	if err != nil {
 		return err
 	}
 
-	dirName = DbtSchemaBaseDirName(dbName)
-	err = makeDirIfMissing(dirName)
-	if err != nil {
-		return err
-	}
-
-	dirName = DbtSchemaDirName(dbName, schemaName)
+	dirName = DbtDirDBSchema(dbName, schemaName)
 	err = makeDirIfMissing(dirName)
 	if err != nil {
 		return err

@@ -7,8 +7,8 @@ import (
 	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/param.mod/v3/param"
-	"github.com/nickwells/param.mod/v3/param/psetter"
+	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/param.mod/v4/param/psetter"
 )
 
 // BaseDirName is the name of the directory where the dbtools directories and
