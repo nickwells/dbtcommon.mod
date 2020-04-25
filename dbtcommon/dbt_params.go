@@ -51,6 +51,8 @@ func setPsqlPathEnvVar(_ location.L, p *param.ByName, _ []string) error {
 // be called before the PSet is parsed
 func AddParams(ps *param.PSet) error {
 	ps.SetEnvPrefix(DbtEnvPrefix)
+	setGlobalConfigFileForGroupPkgDbtcommon(ps)
+	setConfigFileForGroupPkgDbtcommon(ps)
 
 	const paramGroupName = "pkg.dbtcommon"
 	ps.AddGroup(paramGroupName,
