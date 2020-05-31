@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/nickwells/filecheck.mod/filecheck"
-	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/xdg.mod/xdg"
 )
 
@@ -32,6 +32,7 @@ func setConfigFileForGroupPkgDbtcommon(ps *param.PSet) error {
 			"github.com",
 			"nickwells",
 			"dbtcommon.mod",
+			"v2",
 			"dbtcommon",
 			"group-pkg.dbtcommon.cfg"),
 		filecheck.Optional)
@@ -60,6 +61,7 @@ func setGlobalConfigFileForGroupPkgDbtcommon(ps *param.PSet) error {
 			"github.com",
 			"nickwells",
 			"dbtcommon.mod",
+			"v2",
 			"dbtcommon",
 			"group-pkg.dbtcommon.cfg"),
 		filecheck.Optional)
