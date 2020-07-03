@@ -60,11 +60,8 @@ func AddParams(ps *param.PSet) error {
 
 	ps.Add(DbtBaseDirParamName,
 		psetter.Pathname{
-			Value: &BaseDirName,
-			Expectation: filecheck.Provisos{
-				Checks:    []check.FileInfo{check.FileInfoIsDir},
-				Existence: filecheck.MustExist,
-			},
+			Value:       &BaseDirName,
+			Expectation: filecheck.DirExists(),
 		},
 		"the name of the directory under which the database directories"+
 			" will be found. These directories all exist under a db"+
@@ -102,11 +99,8 @@ func AddParamPsqlPath(ps *param.PSet, opts ...param.OptFunc) {
 	opts = append(opts, param.PostAction(setPsqlPathEnvVar))
 	ps.Add(DbtPsqlPathParamName,
 		psetter.Pathname{
-			Value: &PsqlPath,
-			Expectation: filecheck.Provisos{
-				Checks:    []check.FileInfo{check.FileInfoIsRegular},
-				Existence: filecheck.MustExist,
-			},
+			Value:       &PsqlPath,
+			Expectation: filecheck.FileExists(),
 		},
 		"the pathname of the psql command - you will need to do this"+
 			" if the psql command was not in the PATH",
