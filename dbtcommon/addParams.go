@@ -50,13 +50,13 @@ func setPsqlPathEnvVar(_ location.L, p *param.ByName, _ []string) error {
 // AddParams will add the db tools params to the given param set This should
 // be called before the PSet is parsed
 func AddParams(ps *param.PSet) error {
-	ps.SetEnvPrefix(DbtEnvPrefix)
-	_ = setGlobalConfigFileForGroupPkgDbtcommon(ps)
-	_ = setConfigFileForGroupPkgDbtcommon(ps)
-
 	const paramGroupName = "pkg.dbtcommon"
 	ps.AddGroup(paramGroupName,
 		`parameters for any of the commands in the dbTools family`)
+
+	ps.SetEnvPrefix(DbtEnvPrefix)
+	_ = setGlobalConfigFileForGroupPkgDbtcommon(ps)
+	_ = setConfigFileForGroupPkgDbtcommon(ps)
 
 	ps.Add(DbtBaseDirParamName,
 		psetter.Pathname{
