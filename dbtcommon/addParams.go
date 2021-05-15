@@ -87,7 +87,7 @@ func AddParamDBName(ps *param.PSet, opts ...param.OptFunc) {
 					"a database name: a leading lowercase character"+
 						" followed by zero or more lowercase letters,"+
 						" digits or underscores"),
-			}, //add the constraints
+			},
 		},
 		"the name of the database",
 		opts...)
